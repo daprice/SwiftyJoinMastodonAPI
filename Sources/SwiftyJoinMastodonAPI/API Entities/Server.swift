@@ -9,14 +9,25 @@ import Foundation
 
 /// Information about a Mastodon server.
 public struct Server: Codable, Hashable, Sendable {
-	/// Which region a server is legally based in.
-	public enum Region: String, Sendable, Codable {
+	/// Which region a ``Server`` is legally based in.
+	public enum Region: String, Sendable, Codable, CaseIterable {
 		case europe = "europe"
 		case northAmerica = "north_america"
 		case southAmerica = "south_america"
 		case africa = "africa"
 		case asia = "asia"
 		case oceania = "oceania"
+	}
+	
+	/// Legal structure responsible for ownership of a ``Server``.
+	public enum Ownership: String, Sendable, Codable, CaseIterable {
+		case privateIndividual = "natural"
+		case publicOrganization = "juridicial"
+	}
+	
+	public enum RegistrationMethod: String, Sendable, Codable, CaseIterable {
+		case instant = "instant"
+		case manual = "manual"
 	}
 	
 	/// The domain name of the server.
@@ -52,6 +63,11 @@ public struct Server: Codable, Hashable, Sendable {
 	/// - SeeAlso: ``categories``
 	public var category: Category.Name
 	
+	/// The server's registration method as determined by the value of ``approvalRequired``.
+	public var registrations: RegistrationMethod {
+		approvalRequired ? .manual : .instant
+	}
+	
 	public init(domain: String, version: String, description: String, languages: [Language.LanguageCode], region: Region? = nil, categories: [Category.Name], proxiedThumbnail: String, blurhash: String, totalUsers: Int, lastWeekUsers: Int, approvalRequired: Bool, language: Language.LanguageCode, category: Category.Name) {
 		self.domain = domain
 		self.version = version
@@ -66,5 +82,26 @@ public struct Server: Codable, Hashable, Sendable {
 		self.approvalRequired = approvalRequired
 		self.language = language
 		self.category = category
+	}
+	
+	public init(from decoder: any Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		self.domain = try container.decode(String.self, forKey: .domain)
+		self.version = try container.decode(String.self, forKey: .version)
+		self.description = try container.decode(String.self, forKey: .description)
+		self.languages = try container.decode([Language.LanguageCode].self, forKey: .languages)
+		if let regionString = try container.decodeIfPresent(String.self, forKey: .region) {
+			self.region = Region(rawValue: regionString)
+		} else {
+			self.region = nil
+		}
+		self.categories = try container.decode([Category.Name].self, forKey: .categories)
+		self.proxiedThumbnail = try container.decode(String.self, forKey: .proxiedThumbnail)
+		self.blurhash = try container.decode(String.self, forKey: .blurhash)
+		self.totalUsers = try container.decode(Int.self, forKey: .totalUsers)
+		self.lastWeekUsers = try container.decode(Int.self, forKey: .lastWeekUsers)
+		self.approvalRequired = try container.decode(Bool.self, forKey: .approvalRequired)
+		self.language = try container.decode(Language.LanguageCode.self, forKey: .language)
+		self.category = try container.decode(Category.Name.self, forKey: .category)
 	}
 }

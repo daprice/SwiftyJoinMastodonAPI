@@ -24,4 +24,39 @@ public struct DailyStatistics: Codable, Hashable, Sendable {
 		self.userCount = userCount
 		self.activeUserCount = activeUserCount
 	}
+	
+	public init(from decoder: any Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		self.period = try container.decode(Date.self, forKey: .period)
+		
+		if let intServerCount = try? container.decode(Int.self, forKey: .serverCount) {
+			self.serverCount = intServerCount
+		} else {
+			let stringServerCount = try container.decode(String.self, forKey: .serverCount)
+			guard let intServerCount = Int(stringServerCount) else {
+				throw DecodingError.dataCorruptedError(forKey: .serverCount, in: container, debugDescription: "Invalid server count: \(stringServerCount)")
+			}
+			self.serverCount = intServerCount
+		}
+		
+		if let intUserCount = try? container.decode(Int.self, forKey: .userCount) {
+			self.userCount = intUserCount
+		} else {
+			let stringUserCount = try container.decode(String.self, forKey: .userCount)
+			guard let intUserCount = Int(stringUserCount) else {
+				throw DecodingError.dataCorruptedError(forKey: .userCount, in: container, debugDescription: "Invalid user count: \(stringUserCount)")
+			}
+			self.userCount = intUserCount
+		}
+		
+		if let intActiveUserCount = try? container.decode(Int.self, forKey: .activeUserCount) {
+			self.activeUserCount = intActiveUserCount
+		} else {
+			let stringActiveUserCount = try container.decode(String.self, forKey: .activeUserCount)
+			guard let intActiveUserCount = Int(stringActiveUserCount) else {
+				throw DecodingError.dataCorruptedError(forKey: .activeUserCount, in: container, debugDescription: "Invalid user count: \(stringActiveUserCount)")
+			}
+			self.activeUserCount = intActiveUserCount
+		}
+	}
 }
