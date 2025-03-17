@@ -18,13 +18,13 @@ public final class JoinMastodonAPI: Sendable {
 	/// The URLSession instance to make requests when using ``perform(_:)``
 	public let urlSession: URLSession
 	
-	public init(baseURL: URL, urlSession: URLSession = .shared) {
+	public init(baseURL: URL = URL(string: "https://api.joinmastodon.org")!, urlSession: URLSession = .shared) {
 		self.baseURL = baseURL
 		self.urlSession = urlSession
 	}
 	
 	/// A preconfigured singleton that connects to `https://api.joinmastodon.org` using the shared `URLSession`.
-	public static let `default` = JoinMastodonAPI(baseURL: URL(string: "https://api.joinmastodon.org")!)
+	public static let `default` = JoinMastodonAPI()
 	
 	/// A `JSONDecoder` instance configured for the formats used by the joinmastodon API.
 	public static let jsonDecoder = {

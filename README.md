@@ -15,4 +15,8 @@ async let filteredServers = JoinMastodonAPI.default.perform(.getServers(filterPa
 	region: .europe,
 	registrations: .instant
 )))
+
+// Use a custom URLSession
+let customURLSessionAPIClient = JoinMastodonAPI(urlSession: .init(configuration: .ephemeral))
+async let stats = customURLSessionAPIClient.perform(.getStatistics)
 ```

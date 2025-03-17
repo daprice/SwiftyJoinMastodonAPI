@@ -30,7 +30,12 @@ struct ReadmeSampleCodeTests {
 			registrations: .instant
 		)))
 		
+		// Use a custom URLSession
+		let customURLSessionAPIClient = JoinMastodonAPI(urlSession: .init(configuration: .ephemeral))
+		async let stats = customURLSessionAPIClient.perform(.getStatistics)
+		
 		#expect(try await !servers.isEmpty)
 		#expect(try await !filteredServers.isEmpty)
+		#expect(try await !stats.isEmpty)
 	}
 }
