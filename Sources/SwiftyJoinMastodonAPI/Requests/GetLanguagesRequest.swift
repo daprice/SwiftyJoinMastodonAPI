@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 /// Get a list of available ``Language`` that servers can support.
 public struct GetLanguagesRequest: JoinMastodonAPI.Request {
 	public var filterParameters: FilterParameters?

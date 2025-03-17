@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 extension JoinMastodonAPI {
 	
 	/// A request that can be fulfilled by an API endpoint and may have parameters.

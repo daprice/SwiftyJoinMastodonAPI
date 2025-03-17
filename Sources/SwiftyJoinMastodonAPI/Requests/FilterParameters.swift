@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 /// Request parameters for how to filter the returned results.
 public struct FilterParameters: Codable, Hashable, Sendable {
 	/// Only include servers that support this language code.

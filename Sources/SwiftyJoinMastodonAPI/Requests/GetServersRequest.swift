@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 /// Get servers listed on joinmastodon.org.
 public struct GetServersRequest: JoinMastodonAPI.Request {
 	public var filterParameters: FilterParameters?

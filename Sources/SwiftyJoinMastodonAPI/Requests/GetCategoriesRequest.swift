@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 /// Get a list of available ``Category`` that servers can belong to.
 public struct GetCategoriesRequest: JoinMastodonAPI.Request {
 	public var filterParameters: FilterParameters?

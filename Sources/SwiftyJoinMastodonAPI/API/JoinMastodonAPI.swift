@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 /// Represents the API used for [the joinmastodon.org servers page](https://joinmastodon.org/servers).
 public final class JoinMastodonAPI: Sendable {
 	/// The base URL of the host, e.g. `https://api.joinmastodon.org`

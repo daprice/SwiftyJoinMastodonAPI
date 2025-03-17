@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 /// Get daily statistics about the servers tracked by the joinmastodon service.
 public struct GetStatisticsRequest: JoinMastodonAPI.Request {
 	public typealias Response = [DailyStatistics]
