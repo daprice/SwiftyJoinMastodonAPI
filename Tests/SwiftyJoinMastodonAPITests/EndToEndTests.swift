@@ -32,4 +32,51 @@ struct EndToEndTests {
 		
 		#expect(filteredServerCount < totalServerCount)
 	}
+	
+	@Test func testGetLanguages() async throws {
+		let languages = try await JoinMastodonAPI.default.perform(JoinMastodonAPI.LanguagesRequest(filterParameters: .init()))
+		#expect(languages.count > 5)
+		#expect(languages.contains(where: {$0.language == "English" && $0.locale == "en"}))
+	}
+	
+	@Test func testGetStatistics() async throws {
+		let stats = try await JoinMastodonAPI.default.perform(JoinMastodonAPI.StatisticsRequest())
+		#expect(stats.count > 5)
+	}
+	
+	@Test func testGetServers() async throws {
+		let servers = try await JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init()))
+		#expect(servers.count > 5)
+	}
+	
+	@Test func testServerFilters() async throws {
+		async let unfilteredServers = JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init()))
+		async let filteredByLanguage = JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init(language: "en")))
+		async let filteredByCategory = JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init(category: "regional")))
+		async let filteredByRegion = JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init(region: .europe)))
+		async let filteredByOwnership = JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init(ownership: .privateIndividual)))
+		async let filteredByRegistrations = JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init(registrations: .instant)))
+		async let filteredByMultiple = JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init(language: "en", category: "general", region: .europe, ownership: .privateIndividual, registrations: .instant)))
+		
+		#expect(try await !filteredByLanguage.isEmpty)
+		#expect(try await filteredByLanguage.count < unfilteredServers.count)
+		#expect(try await filteredByLanguage.allSatisfy({ $0.languages.contains("en") }))
+		#expect(try await !unfilteredServers.allSatisfy({ $0.languages.contains("en") }))
+		
+		#expect(try await !filteredByCategory.isEmpty)
+		#expect(try await filteredByCategory.count < unfilteredServers.count)
+		
+		#expect(try await !filteredByRegion.isEmpty)
+		#expect(try await filteredByRegion.count < unfilteredServers.count)
+		
+		#expect(try await !filteredByOwnership.isEmpty)
+		#expect(try await filteredByOwnership.count < unfilteredServers.count)
+		
+		#expect(try await !filteredByRegistrations.isEmpty)
+		#expect(try await filteredByRegistrations.count < unfilteredServers.count)
+		
+		#expect(try await !filteredByMultiple.isEmpty)
+		#expect(try await filteredByMultiple.count < unfilteredServers.count)
+		#expect(try await filteredByMultiple.count < filteredByLanguage.count)
+	}
 }

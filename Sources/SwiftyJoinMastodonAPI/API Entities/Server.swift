@@ -47,7 +47,7 @@ public struct Server: Codable, Hashable, Sendable {
 	/// The URL to fetch the server's thumbnail image using joinmastodon's proxy.
 	public var proxiedThumbnail: String
 	/// The BlurHash string for the server's thumbnail image.
-	public var blurhash: String
+	public var blurhash: String?
 	/// The total number of users registered on the server.
 	public var totalUsers: Int
 	/// The number of users active on the server in the past week.
@@ -97,7 +97,7 @@ public struct Server: Codable, Hashable, Sendable {
 		}
 		self.categories = try container.decode([Category.Name].self, forKey: .categories)
 		self.proxiedThumbnail = try container.decode(String.self, forKey: .proxiedThumbnail)
-		self.blurhash = try container.decode(String.self, forKey: .blurhash)
+		self.blurhash = try container.decodeIfPresent(String.self, forKey: .blurhash)
 		self.totalUsers = try container.decode(Int.self, forKey: .totalUsers)
 		self.lastWeekUsers = try container.decode(Int.self, forKey: .lastWeekUsers)
 		self.approvalRequired = try container.decode(Bool.self, forKey: .approvalRequired)

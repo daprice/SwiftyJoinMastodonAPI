@@ -56,4 +56,50 @@ extension JoinMastodonAPI {
 			filterParameters.queryItems
 		}
 	}
+	
+	public struct LanguagesRequest: Request {
+		public var filterParameters: FilterParameters
+		public typealias Response = [Language]
+		
+		public init(filterParameters: FilterParameters) {
+			self.filterParameters = filterParameters
+		}
+		
+		public var relativePath: String {
+			"languages"
+		}
+		
+		public var queryItems: [URLQueryItem] {
+			filterParameters.queryItems
+		}
+	}
+	
+	public struct ServersRequest: Request {
+		public var filterParameters: FilterParameters
+		public typealias Response = [Server]
+		
+		public init(filterParameters: FilterParameters) {
+			self.filterParameters = filterParameters
+		}
+		
+		public var relativePath: String {
+			"servers"
+		}
+		
+		public var queryItems: [URLQueryItem] {
+			filterParameters.queryItems
+		}
+	}
+	
+	public struct StatisticsRequest: Request {
+		public typealias Response = [DailyStatistics]
+		
+		public init() {}
+		
+		public var relativePath: String {
+			"statistics"
+		}
+		
+		public var queryItems: [URLQueryItem] { [] }
+	}
 }
