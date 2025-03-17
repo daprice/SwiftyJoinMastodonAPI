@@ -12,7 +12,7 @@ import Foundation
 struct EndToEndTests {
 
     @Test func testGetCategories() async throws {
-		let request = JoinMastodonAPI.CategoriesRequest(filterParameters: .init())
+		let request = GetCategoriesRequest()
 		let url = JoinMastodonAPI.default.url(for: request)
 		let (data, _) = try await URLSession.shared.data(from: url)
 		let categories: [SwiftyJoinMastodonAPI.Category] = try JoinMastodonAPI.jsonDecoder.decode([SwiftyJoinMastodonAPI.Category].self, from: data)
@@ -21,10 +21,10 @@ struct EndToEndTests {
     }
 
 	@Test func testGetFilteredCategories() async throws {
-		let request = JoinMastodonAPI.CategoriesRequest(filterParameters: .init())
+		let request = GetCategoriesRequest()
 		async let categories = try await JoinMastodonAPI.default.perform(request)
 		
-		let filteredRequest = JoinMastodonAPI.CategoriesRequest(filterParameters: .init(language: "en"))
+		let filteredRequest = GetCategoriesRequest(filterParameters: .init(language: "en"))
 		async let filteredCategories = JoinMastodonAPI.default.perform(filteredRequest)
 		
 		let totalServerCount = try await categories.reduce(into: 0) { $0 = $0 + $1.serversCount }
@@ -34,29 +34,29 @@ struct EndToEndTests {
 	}
 	
 	@Test func testGetLanguages() async throws {
-		let languages = try await JoinMastodonAPI.default.perform(JoinMastodonAPI.LanguagesRequest(filterParameters: .init()))
+		let languages = try await JoinMastodonAPI.default.perform(GetLanguagesRequest(filterParameters: .init()))
 		#expect(languages.count > 5)
 		#expect(languages.contains(where: {$0.language == "English" && $0.locale == "en"}))
 	}
 	
 	@Test func testGetStatistics() async throws {
-		let stats = try await JoinMastodonAPI.default.perform(JoinMastodonAPI.StatisticsRequest())
+		let stats = try await JoinMastodonAPI.default.perform(GetStatisticsRequest())
 		#expect(stats.count > 5)
 	}
 	
 	@Test func testGetServers() async throws {
-		let servers = try await JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init()))
+		let servers = try await JoinMastodonAPI.default.perform(GetServersRequest(filterParameters: .init()))
 		#expect(servers.count > 5)
 	}
 	
 	@Test func testServerFilters() async throws {
-		async let unfilteredServers = JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init()))
-		async let filteredByLanguage = JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init(language: "en")))
-		async let filteredByCategory = JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init(category: "regional")))
-		async let filteredByRegion = JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init(region: .europe)))
-		async let filteredByOwnership = JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init(ownership: .privateIndividual)))
-		async let filteredByRegistrations = JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init(registrations: .instant)))
-		async let filteredByMultiple = JoinMastodonAPI.default.perform(JoinMastodonAPI.ServersRequest(filterParameters: .init(language: "en", category: "general", region: .europe, ownership: .privateIndividual, registrations: .instant)))
+		async let unfilteredServers = JoinMastodonAPI.default.perform(GetServersRequest())
+		async let filteredByLanguage = JoinMastodonAPI.default.perform(GetServersRequest(filterParameters: .init(language: "en")))
+		async let filteredByCategory = JoinMastodonAPI.default.perform(GetServersRequest(filterParameters: .init(category: "regional")))
+		async let filteredByRegion = JoinMastodonAPI.default.perform(GetServersRequest(filterParameters: .init(region: .europe)))
+		async let filteredByOwnership = JoinMastodonAPI.default.perform(GetServersRequest(filterParameters: .init(ownership: .privateIndividual)))
+		async let filteredByRegistrations = JoinMastodonAPI.default.perform(GetServersRequest(filterParameters: .init(registrations: .instant)))
+		async let filteredByMultiple = JoinMastodonAPI.default.perform(GetServersRequest(filterParameters: .init(language: "en", category: "general", region: .europe, ownership: .privateIndividual, registrations: .instant)))
 		
 		#expect(try await !filteredByLanguage.isEmpty)
 		#expect(try await filteredByLanguage.count < unfilteredServers.count)
