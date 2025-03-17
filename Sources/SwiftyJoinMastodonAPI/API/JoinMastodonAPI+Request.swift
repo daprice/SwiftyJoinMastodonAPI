@@ -50,12 +50,5 @@ extension JoinMastodonAPI {
 				filterParameters.queryItems
 			}
 		}
-		
-		public var resultType: Any.Type {
-			switch self {
-			case .getCategories(_):
-				[Category].self
-			}
-		}
 	}
 }
