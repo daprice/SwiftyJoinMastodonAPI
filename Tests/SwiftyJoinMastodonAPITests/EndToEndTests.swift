@@ -12,7 +12,7 @@ import Foundation
 struct EndToEndTests {
 
     @Test func testGetCategories() async throws {
-		let request = JoinMastodonAPI.Request.getCategories(.init())
+		let request = JoinMastodonAPI.CategoriesRequest(filterParameters: .init())
 		let url = JoinMastodonAPI.default.url(for: request)
 		let (data, _) = try await URLSession.shared.data(from: url)
 		let categories: [SwiftyJoinMastodonAPI.Category] = try JoinMastodonAPI.jsonDecoder.decode([SwiftyJoinMastodonAPI.Category].self, from: data)
@@ -21,17 +21,14 @@ struct EndToEndTests {
     }
 
 	@Test func testGetFilteredCategories() async throws {
-		let request = JoinMastodonAPI.Request.getCategories(.init())
-		let url = JoinMastodonAPI.default.url(for: request)
-		let (data, _) = try await URLSession.shared.data(from: url)
-		let categories: [SwiftyJoinMastodonAPI.Category] = try JoinMastodonAPI.jsonDecoder.decode([SwiftyJoinMastodonAPI.Category].self, from: data)
-		let totalServerCount = categories.reduce(into: 0) { $0 = $0 + $1.serversCount }
+		let request = JoinMastodonAPI.CategoriesRequest(filterParameters: .init())
+		async let categories = try await JoinMastodonAPI.default.perform(request)
 		
-		let filteredRequest = JoinMastodonAPI.Request.getCategories(.init(language: "en"))
-		let filteredUrl = JoinMastodonAPI.default.url(for: filteredRequest)
-		let (filteredData, _) = try await URLSession.shared.data(from: filteredUrl)
-		let filteredCategories: [SwiftyJoinMastodonAPI.Category] = try JoinMastodonAPI.jsonDecoder.decode([SwiftyJoinMastodonAPI.Category].self, from: filteredData)
-		let filteredServerCount = filteredCategories.reduce(into: 0) { $0 = $0 + $1.serversCount }
+		let filteredRequest = JoinMastodonAPI.CategoriesRequest(filterParameters: .init(language: "en"))
+		async let filteredCategories = JoinMastodonAPI.default.perform(filteredRequest)
+		
+		let totalServerCount = try await categories.reduce(into: 0) { $0 = $0 + $1.serversCount }
+		let filteredServerCount = try await filteredCategories.reduce(into: 0) { $0 = $0 + $1.serversCount }
 		
 		#expect(filteredServerCount < totalServerCount)
 	}

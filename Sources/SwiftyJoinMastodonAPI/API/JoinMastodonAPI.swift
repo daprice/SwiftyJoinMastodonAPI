@@ -9,9 +9,11 @@ import Foundation
 
 public final class JoinMastodonAPI: Sendable {
 	public let baseURL: URL
+	public let urlSession: URLSession
 	
-	public init(baseURL: URL) {
+	public init(baseURL: URL, urlSession: URLSession = .shared) {
 		self.baseURL = baseURL
+		self.urlSession = urlSession
 	}
 	
 	public static let `default` = JoinMastodonAPI(baseURL: URL(string: "https://api.joinmastodon.org/")!)
@@ -41,9 +43,14 @@ public final class JoinMastodonAPI: Sendable {
 		return decoder
 	}()
 	
-	public func url(for request: Request) -> URL {
+	public func url(for request: any Request) -> URL {
 		baseURL
 			.appending(path: request.relativePath)
 			.appending(queryItems: request.queryItems)
+	}
+	
+	public func perform<R: Request>(_ request: R) async throws -> R.Response {
+		let (data, _) = try await urlSession.data(from: url(for: request))
+		return try Self.jsonDecoder.decode(R.Response.self, from: data)
 	}
 }
