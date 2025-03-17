@@ -17,4 +17,11 @@ public struct DailyStatistics: Codable, Hashable, Sendable {
 	public var userCount: Int
 	/// The number of active users on this day.
 	public var activeUserCount: Int
+	
+	public init(period: Date, serverCount: Int, userCount: Int, activeUserCount: Int) {
+		self.period = period
+		self.serverCount = serverCount
+		self.userCount = userCount
+		self.activeUserCount = activeUserCount
+	}
 }
