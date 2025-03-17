@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Get a list of available ``Language`` that servers can support.
 public struct GetLanguagesRequest: JoinMastodonAPI.Request {
 	public var filterParameters: FilterParameters?
 	public typealias Response = [Language]

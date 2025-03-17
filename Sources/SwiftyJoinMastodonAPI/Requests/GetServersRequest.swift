@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Get servers listed on joinmastodon.org.
 public struct GetServersRequest: JoinMastodonAPI.Request {
 	public var filterParameters: FilterParameters?
 	public typealias Response = [Server]

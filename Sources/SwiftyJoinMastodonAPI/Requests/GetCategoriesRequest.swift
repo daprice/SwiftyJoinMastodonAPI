@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Get a list of available ``Category`` that servers can belong to.
 public struct GetCategoriesRequest: JoinMastodonAPI.Request {
 	public var filterParameters: FilterParameters?
 	public typealias Response = [Category]
