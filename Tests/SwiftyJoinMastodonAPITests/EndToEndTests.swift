@@ -7,15 +7,18 @@
 
 import Testing
 import Foundation
+
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 @testable import SwiftyJoinMastodonAPI
 
 struct EndToEndTests {
 
     @Test func testGetCategories() async throws {
 		let request = GetCategoriesRequest()
-		let url = JoinMastodonAPI.default.url(for: request)
-		let (data, _) = try await URLSession.shared.data(from: url)
-		let categories: [SwiftyJoinMastodonAPI.Category] = try JoinMastodonAPI.jsonDecoder.decode([SwiftyJoinMastodonAPI.Category].self, from: data)
+		let categories = try await JoinMastodonAPI.default.perform(request)
 		#expect(categories.count > 5)
 		#expect(categories.contains(where: { $0.category == "furry" })) // If there aren't any furry servers we're doomed
     }

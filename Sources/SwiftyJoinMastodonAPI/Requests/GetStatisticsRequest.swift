@@ -22,4 +22,8 @@ public struct GetStatisticsRequest: JoinMastodonAPI.Request {
 	}
 	
 	public var queryItems: [URLQueryItem] { [] }
+	
+	public func configureURLRequest(_ urlRequest: inout URLRequest) {
+		urlRequest.httpMethod = "GET"
+	}
 }

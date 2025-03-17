@@ -27,4 +27,8 @@ public struct GetLanguagesRequest: JoinMastodonAPI.Request {
 	public var queryItems: [URLQueryItem] {
 		filterParameters?.queryItems ?? []
 	}
+	
+	public func configureURLRequest(_ urlRequest: inout URLRequest) {
+		urlRequest.httpMethod = "GET"
+	}
 }

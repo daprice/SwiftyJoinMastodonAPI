@@ -53,10 +53,20 @@ public final class JoinMastodonAPI: Sendable {
 	}()
 	
 	/// Get the full URL for any request, including query parameters.
-	public func url(for request: any Request) -> URL {
+	private func url(for request: any Request) -> URL {
 		baseURL
 			.appending(path: request.relativePath)
 			.appending(queryItems: request.queryItems)
+	}
+	
+	/// Get a URLRequest configured for a given API request.
+	///
+	/// You can use this if you want to modify the `URLRequest` in some way or use it on your own instead of calling ``perform(_:)``. Otherwise, it's simpler to call ``perform(_:)`` which takes care of handling the request for you.
+	public func urlRequest(for request: any Request) -> URLRequest {
+		var urlRequest = URLRequest(url: url(for: request))
+		urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+		request.configureURLRequest(&urlRequest)
+		return urlRequest
 	}
 	
 	/// Perform a request and return the decoded response.
@@ -66,7 +76,7 @@ public final class JoinMastodonAPI: Sendable {
 	///	async let servers = JoinMastodonAPI.shared.perform(.getServers) // returns `[Server]` asynchronously
 	/// ```
 	public func perform<R: Request>(_ request: R) async throws -> R.Response {
-		let (data, _) = try await urlSession.data(from: url(for: request))
+		let (data, _) = try await urlSession.data(for: urlRequest(for: request))
 		return try Self.jsonDecoder.decode(R.Response.self, from: data)
 	}
 }

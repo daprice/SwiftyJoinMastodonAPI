@@ -19,6 +19,8 @@ extension JoinMastodonAPI {
 		var relativePath: String { get }
 		/// Array of `URLQueryItem` to send as URL parameters.
 		var queryItems: [URLQueryItem] { get }
+		/// Set any properties on a URLRequest that are specific to this request.
+		func configureURLRequest(_ urlRequest: inout URLRequest)
 		/// The type to decode the response as.
 		associatedtype Response: Decodable
 	}
