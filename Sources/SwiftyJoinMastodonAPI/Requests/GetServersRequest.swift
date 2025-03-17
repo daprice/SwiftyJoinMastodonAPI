@@ -12,6 +12,8 @@ import FoundationNetworking
 #endif
 
 /// Get servers listed on joinmastodon.org.
+///
+/// For convenience, you can also create this request using ``JoinMastodonAPI/Request/getServers`` or ``JoinMastodonAPI/Request/getServers(filterParameters:)``
 public struct GetServersRequest: JoinMastodonAPI.Request {
 	public var filterParameters: FilterParameters?
 	public typealias Response = [Server]

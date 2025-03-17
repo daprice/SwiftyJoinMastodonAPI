@@ -12,6 +12,8 @@ import FoundationNetworking
 #endif
 
 /// Get daily statistics about the servers tracked by the joinmastodon service.
+///
+/// For convenience, you can also create this request using ``JoinMastodonAPI/Request/getStatistics``.
 public struct GetStatisticsRequest: JoinMastodonAPI.Request {
 	public typealias Response = [DailyStatistics]
 	

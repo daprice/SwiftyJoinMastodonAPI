@@ -12,6 +12,8 @@ import FoundationNetworking
 #endif
 
 /// Get a list of available ``Language`` that servers can support.
+///
+/// For convenience, you can also create this request using ``JoinMastodonAPI/Request/getLanguages`` or ``JoinMastodonAPI/Request/getLanguages(filterParameters:)``,
 public struct GetLanguagesRequest: JoinMastodonAPI.Request {
 	public var filterParameters: FilterParameters?
 	public typealias Response = [Language]

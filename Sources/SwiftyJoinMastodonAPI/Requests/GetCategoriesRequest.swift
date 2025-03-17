@@ -12,6 +12,8 @@ import FoundationNetworking
 #endif
 
 /// Get a list of available ``Category`` that servers can belong to.
+///
+/// For convenience, you can also create this request using ``JoinMastodonAPI/Request/getCategories`` or ``JoinMastodonAPI/Request/getCategories(filterParameters:)``.
 public struct GetCategoriesRequest: JoinMastodonAPI.Request {
 	public var filterParameters: FilterParameters?
 	public typealias Response = [Category]
