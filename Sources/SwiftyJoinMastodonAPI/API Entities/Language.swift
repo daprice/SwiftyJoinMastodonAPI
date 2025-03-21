@@ -13,13 +13,13 @@ public struct Language: Codable, Hashable, Sendable {
 	public typealias LanguageCode = String
 	
 	/// The ISO 639 language code for the language.
-	public var locale: String
+	public var locale: LanguageCode
 	/// The native name of the language.
-	public var language: LanguageCode?
+	public var language: String?
 	/// The number of servers that support this language.
 	public var serversCount: Int
 	
-	public init(locale: String, language: LanguageCode? = nil, serversCount: Int) {
+	public init(locale: LanguageCode, language: String? = nil, serversCount: Int) {
 		self.locale = locale
 		self.language = language
 		self.serversCount = serversCount
