@@ -20,3 +20,7 @@ async let filteredServers = JoinMastodonAPI.default.perform(.getServers(filterPa
 let customURLSessionAPIClient = JoinMastodonAPI(urlSession: .init(configuration: .ephemeral))
 async let stats = customURLSessionAPIClient.perform(.getStatistics)
 ```
+
+## Related projects
+
+- [TootSDK](https://github.com/TootSDK/TootSDK) - Once you've listed servers using SwiftyJoinMastodonAPI, you'll probably want to interact with them. TootSDK implements the Mastodon client API in a way that's compatible with many different Fediverse servers.
